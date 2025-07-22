@@ -28,7 +28,10 @@ class ModelTrainer:
                 label_dict[rel_path] = feature
         
         # Create binary mapping for eye detection
-        label_to_idx = {'eye_images': 1}  # Eyes are positive class (1), everything else is negative (0)
+        label_to_idx = {
+            'eye_images': 1,     # Eyes are positive class (1)
+            'non_eye_images': 0  # Non-eyes are negative class (0)
+        }
         print(f"\nFeature mapping: {label_to_idx}")
         
         # Load images and their corresponding labels
