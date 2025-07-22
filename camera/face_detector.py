@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from processing import *
 
 def detect_face(frame, cascade_path="haarcascade_frontalface_default.xml"):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + cascade_path)
@@ -45,5 +46,23 @@ def predict_landmarks_with_ml(roi, model):
     roi_flat = roi.flatten().reshape(1, -1)
     landmarks = model.predict(roi_flat)
     return landmarks
+
+cap = cv2.VideoCapture(0)  # Open default camera
+while True:
+    ret, frame = cap.read()
+    if not ret or frame is None:
+        print("Failed to grab frame")
+        break
+
+    processed = preprocess_frame(frame, resize_dim=(640, 480), flip=True)
+    if processed is None:
+        print("Preprocessing failed")
+        break
+
+    # Now safe to call get_heuristic_face_roi
+    face_rect = get_heuristic_face_roi(processed)
+
+cap.release()
+cv2.destroyAllWindows()
 
 
